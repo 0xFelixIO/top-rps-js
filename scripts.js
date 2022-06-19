@@ -21,9 +21,9 @@ function playRound(playerSelection, computerSelection) {
 
     else if (playerSelection == 'paper') {
         if (computerSelection == 'scissors') 
-            return 'player';
+            return 'computer';
         else if (computerSelection == 'rock')
-            return 'computer'
+            return 'player'
         else
             return 'tie'
     }
@@ -38,28 +38,38 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    let roundWinner;
-    let playerResponse;
-    let computerResponse;
-
-    for (let i = 0; i < 5; i++) {
-        playerResponse = (prompt("What move will you make, Rock, Paper, or Scissors!???").toLowerCase());
-        console.log("PLAYER RESPONSE: " + playerResponse);
-
-        computerResponse = computerPlay();
-        console.log("COMPUTER RESPONSE: " + computerResponse);
-        
-        roundWinner = playRound(playerResponse, computerResponse);
-        console.log(roundWinner);
-        
-        if (roundWinner == 'computer')
-            computerScore++;
-        else if (roundWinner == 'player')
-            playerScore++
+function playGame(e) {
+    let computerSelection = computerPlay();
+    let playerSelection = this.textContent;
+    let resultsTab = document.getElementsByClassName('resultsTab')[0];
+    resultsTab.innerHTML = "Player Choice: " + playerSelection + "<br />" + "Computer Choice: " + computerSelection;
+    let result = playRound(playerSelection, computerSelection);
+    
+    if (result == 'player') {
+        playerScore++;
+    }
+    else if (result == 'computer') {
+        computerScore++;
     }
 
-    console.log("pc: " + computerScore + " player: " + playerScore);
+    if (playerScore == 5 || computerScore == 5) {
+        let winner = '';
+        if (playerScore == 5) {
+            winner = 'Player';
+        }
+        else winner = 'Computer';
+
+        resultsTab.innerHTML += "<br />GAME OVER - \nPlayer: " + playerScore + " - Computer: " + computerScore + "<br />" + winner + " WINS!";
+        playerScore = 0;
+        computerScore = 0;
+        return;
+    }
+
+    resultsTab.innerHTML += "<br />Player Score: " + playerScore + " - Computer Score: " + computerScore;
+
 }
+
+let playerScore = 0;
+let computerScore = 0;
+const buttons = document.querySelectorAll('button');
+buttons.forEach((button) => button.addEventListener('click', playGame));
